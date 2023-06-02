@@ -177,7 +177,7 @@ export default function App() {
         <ul className="pagination">
           {/* Previous button */}
             <Button className="page-link" onClick={() => paginate(currentPage - 1)}>
-              Previous
+              {'<'}
             </Button>
           
 
@@ -202,7 +202,7 @@ export default function App() {
 
           {/* Next button */}
             <Button className="page-link" onClick={() => paginate(currentPage + 1)}>
-              Next
+              {'>'}
             </Button>
         </ul>
       )}
