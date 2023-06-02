@@ -42,7 +42,7 @@ export default function App() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const contactsPerPage = 5; // Number of contacts to display per page
-  const pageLimit = 3;
+  const pageLimit = 1;
 
   // Calculate the indexes of the contacts to display on the current page
   const indexOfLastContact = currentPage * contactsPerPage;
@@ -171,7 +171,7 @@ export default function App() {
                 </Table>
 
                 {/* Pagination */}
-                <Box sx={{ maxWidth: 550, marginLeft: 'auto', marginRight: 'auto' }}>
+                <Box sx={{ maxWidth: 425, marginLeft: 'auto', marginRight: 'auto' }}>
                   <div>
       {contacts.length > contactsPerPage && (
         <ul className="pagination">
