@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@iexec/web3mail": "^0.0.0-nightly-cb75c44ed80f3698dd7923d62ccaf609a455305d",
+    "@iexec/web3mail": "^0.0.0-nightly-922f74ec5a0f2d37f82669b7fb9060971f9ad484",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "latest",
     "@reduxjs/toolkit": "^1.9.3",

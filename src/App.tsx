@@ -19,7 +19,7 @@ import { Fragment, useState } from "react";
 import { useAccount, useDisconnect } from 'wagmi';
 import "./styles.css";
 import Connect from './wallet/connect';
-import { fetchMyContacts } from "./web3mail/web3mail";
+import { fetchMyContacts, sendMail } from "./web3mail/web3mail";
 
 const theme = createTheme({
   palette: {
@@ -87,9 +87,9 @@ export default function App() {
     setLoading(false);
     setdisplayTable(true);
   };
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (protectedData: string) => {
     setLoading(true);
-    await new Promise((f) => setTimeout(f, 2000));
+    const res = await sendMail("Sandbox mail subject","Sandbox mail content",protectedData);
     setLoading(false);
     setemailSentSuccess(true);
   };
@@ -159,7 +159,7 @@ export default function App() {
                           <Button
                             className="ButtonSendM"
                             sx={{}}
-                            onClick={() => handleSendMessage()}
+                            onClick={() => handleSendMessage(contact.address)}
                             variant="contained"
                           >
                             Send Message
@@ -176,7 +176,7 @@ export default function App() {
       {contacts.length > contactsPerPage && (
         <ul className="pagination">
           {/* Previous button */}
-            <Button className="page-link" onClick={() => paginate(currentPage - 1)}>
+                        <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage - 1)}>
               {'<'}
             </Button>
           
@@ -185,23 +185,23 @@ export default function App() {
           {getPageNumbers().map((pageNumber, index) => (
             <Fragment key={index}>
               {index === 0 && currentPage > Math.floor(pageLimit / 2) && (
-               <Button >...</Button>
+               <Button sx={{color:'black'} } >...</Button>
               )}
 
             
-                <Button className="page-link" onClick={() => paginate(pageNumber)}>
+                <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(pageNumber)}>
                   {pageNumber}
                 </Button>
               
 
               {index === getPageNumbers().length - 1 && pageNumber < totalPages - Math.floor(pageLimit / 2) && (
-                 <Button >...</Button>
+                 <Button sx={{color:'black'} }>...</Button>
               )}
             </Fragment>
           ))}
 
           {/* Next button */}
-            <Button className="page-link" onClick={() => paginate(currentPage + 1)}>
+            <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage + 1)}>
               {'>'}
             </Button>
         </ul>
