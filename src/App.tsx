@@ -81,18 +81,26 @@ export default function App() {
   };
 
   const handleLoadAddresses = async () => {
+    try {
     setLoading(true);
     const res = await fetchMyContacts();
     setContacts(res);
     setLoading(false);
     setdisplayTable(true);
+    } catch (e) {
+      setLoading(false);
+    }
   };
   const handleSendMessage = async (protectedData: string) => {
-    setLoading(true);
-    const res = await sendMail("Sandbox mail subject","Sandbox mail content",protectedData);
-    setLoading(false);
-    setemailSentSuccess(true);
-  };
+   
+    try {
+      setLoading(true);
+      await sendMail("Sandbox mail subject", "Sandbox mail content", protectedData);
+      setLoading(false);
+      setemailSentSuccess(true);
+    } catch (e) {
+      setLoading(false);
+    } };
   
   //wallet address shortening
   const shortAddress = (address: string) => {
