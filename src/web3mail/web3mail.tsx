@@ -19,10 +19,10 @@ export const sendMail = async (mailObject: string, mailContent: string, protecte
   const account = getAccount();
   const provider = await account.connector?.getProvider();
   const web3mail = new IExecWeb3Mail(provider);
-    const contacts = await web3mail.sendEmail({mailObject ,mailContent,protectedData });
-  return contacts;
+    const txHash = await web3mail.sendEmail({mailObject ,mailContent,protectedData });
+  return txHash;
 } catch (error) {
-    console.error('Error fetching contacts:', error);
+    console.error('Error sending web3 mail:', error);
     throw error;
   }
 };
