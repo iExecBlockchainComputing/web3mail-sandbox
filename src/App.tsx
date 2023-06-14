@@ -184,7 +184,7 @@ export default function App() {
       {contacts.length > contactsPerPage && (
         <ul className="pagination">
           {/* Previous button */}
-                        <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage - 1)}>
+                        <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
               {'<'}
             </Button>
           
@@ -192,9 +192,9 @@ export default function App() {
           {/* Page numbers */}
           {getPageNumbers().map((pageNumber, index) => (
             <Fragment key={index}>
-              {index === 0 && currentPage > Math.floor(pageLimit / 2) && (
+              
                <Button sx={{color:'black'} } >...</Button>
-              )}
+             
 
             
                 <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(pageNumber)}>
@@ -202,14 +202,14 @@ export default function App() {
                 </Button>
               
 
-              {index === getPageNumbers().length - 1 && pageNumber < totalPages - Math.floor(pageLimit / 2) && (
+              
                  <Button sx={{color:'black'} }>...</Button>
-              )}
+              
             </Fragment>
           ))}
 
           {/* Next button */}
-            <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage + 1)}>
+            <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
               {'>'}
             </Button>
         </ul>
