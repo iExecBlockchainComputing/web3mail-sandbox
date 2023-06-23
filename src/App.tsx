@@ -1,4 +1,4 @@
-import { Contact } from "@iexec/web3mail";
+import { Contact } from '@iexec/web3mail';
 import {
   Alert,
   AppBar,
@@ -13,25 +13,24 @@ import {
   ThemeProvider,
   Toolbar,
   Typography,
-  createTheme
-} from "@mui/material";
-import { Fragment, useState } from "react";
+  createTheme,
+} from '@mui/material';
+import { Fragment, useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
-import "./styles.css";
+import './styles.css';
 import Connect from './wallet/connect';
-import { fetchMyContacts, sendMail } from "./web3mail/web3mail";
+import { fetchMyContacts, sendMail } from './web3mail/web3mail';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#FCD15A",
-      contrastText: "#1D1D24",
+      main: '#FCD15A',
+      contrastText: '#1D1D24',
     },
   },
 });
 
 export default function App() {
-
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -47,7 +46,10 @@ export default function App() {
   // Calculate the indexes of the contacts to display on the current page
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
-  const currentContacts = contacts.slice(indexOfFirstContact, indexOfLastContact);
+  const currentContacts = contacts.slice(
+    indexOfFirstContact,
+    indexOfLastContact
+  );
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(contacts.length / contactsPerPage);
@@ -82,31 +84,35 @@ export default function App() {
 
   const handleLoadAddresses = async () => {
     try {
-    setLoading(true);
-    const res = await fetchMyContacts();
-    setContacts(res);
-    setLoading(false);
-    setdisplayTable(true);
+      setLoading(true);
+      const res = await fetchMyContacts();
+      setContacts(res);
+      setLoading(false);
+      setdisplayTable(true);
     } catch (e) {
       setLoading(false);
     }
   };
   const handleSendMessage = async (protectedData: string) => {
-   
     try {
       setLoading(true);
-      await sendMail("Sandbox mail subject", "Sandbox mail content", protectedData);
+      await sendMail(
+        'Sandbox mail subject',
+        'Sandbox mail content',
+        protectedData
+      );
       setLoading(false);
       setemailSentSuccess(true);
     } catch (e) {
       setLoading(false);
-    } };
-  
+    }
+  };
+
   //wallet address shortening
   const shortAddress = (address: string) => {
     return address.slice(0, 6) + '...' + address.slice(-4);
   };
-  
+
   return (
     <ThemeProvider theme={theme}>
       {isConnected ? (
@@ -134,32 +140,58 @@ export default function App() {
             </Toolbar>
           </AppBar>
 
-      <Box className="my-box">
-        <Button
-          sx={{ display: "block", margin: "20px auto" }}
-          onClick={handleLoadAddresses}
-          variant="contained"
-        >
-          Load authorized addresses
-        </Button>
-        {loading && (
-          <CircularProgress
-            sx={{ display: "block", margin: "20px auto" }}
-          ></CircularProgress>
-        )}
+          <Box className="my-box">
+            <Button
+              sx={{ display: 'block', margin: '20px auto' }}
+              onClick={handleLoadAddresses}
+              variant="contained"
+            >
+              Load authorized addresses
+            </Button>
+            {loading && (
+              <CircularProgress
+                sx={{ display: 'block', margin: '20px auto' }}
+              ></CircularProgress>
+            )}
 
             {displayTable && (
               <div>
-                <Table sx={{ maxWidth: 200, marginLeft: 'auto', marginRight: 'auto' }} aria-label="simple table">
+                <Table
+                  sx={{
+                    maxWidth: 200,
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                  aria-label="simple table"
+                >
                   <TableHead sx={{ border: 0, borderBottom: 'none' }}>
                     <TableRow sx={{ border: 0, borderBottom: 'none' }}>
-                      <TableCell sx={{ border: 0, borderBottom: 'none', fontWeight: 600 }}>ETH Address</TableCell>
-                      <TableCell sx={{ border: 0, borderBottom: 'none', fontWeight: 600 }}>Action</TableCell>
+                      <TableCell
+                        sx={{
+                          border: 0,
+                          borderBottom: 'none',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Protected Data Address
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          border: 0,
+                          borderBottom: 'none',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Action
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {currentContacts.map((contact, index) => (
-                      <TableRow key={index} sx={{ border: 0, borderBottom: 'none' }}>
+                      <TableRow
+                        key={index}
+                        sx={{ border: 0, borderBottom: 'none' }}
+                      >
                         <TableCell component="th" scope="row">
                           {shortAddress(contact.address)}
                         </TableCell>
@@ -179,54 +211,67 @@ export default function App() {
                 </Table>
 
                 {/* Pagination */}
-                <Box sx={{ maxWidth: 425, marginLeft: 'auto', marginRight: 'auto' }}>
+                <Box
+                  sx={{
+                    maxWidth: 425,
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
                   <div>
-      {contacts.length > contactsPerPage && (
-        <ul className="pagination">
-          {/* Previous button */}
-                        <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
-              {'<'}
-            </Button>
-          
+                    {contacts.length > contactsPerPage && (
+                      <ul className="pagination">
+                        {/* Previous button */}
+                        <Button
+                          sx={{ color: 'black' }}
+                          className="page-link"
+                          onClick={() => paginate(currentPage - 1)}
+                          disabled={currentPage === 1}
+                        >
+                          {'<'}
+                        </Button>
 
-          {/* Page numbers */}
-          {getPageNumbers().map((pageNumber, index) => (
-            <Fragment key={index}>
-              
-               <Button sx={{color:'black'} } >...</Button>
-             
+                        {/* Page numbers */}
+                        {getPageNumbers().map((pageNumber, index) => (
+                          <Fragment key={index}>
+                            <Button sx={{ color: 'black' }}>...</Button>
 
-            
-                <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(pageNumber)}>
-                  {pageNumber}
-                </Button>
-              
+                            <Button
+                              sx={{ color: 'black' }}
+                              className="page-link"
+                              onClick={() => paginate(pageNumber)}
+                            >
+                              {pageNumber}
+                            </Button>
 
-              
-                 <Button sx={{color:'black'} }>...</Button>
-              
-            </Fragment>
-          ))}
+                            <Button sx={{ color: 'black' }}>...</Button>
+                          </Fragment>
+                        ))}
 
-          {/* Next button */}
-            <Button sx={{color:'black'} } className="page-link" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
-              {'>'}
-            </Button>
-        </ul>
-      )}
-    </div>
+                        {/* Next button */}
+                        <Button
+                          sx={{ color: 'black' }}
+                          className="page-link"
+                          onClick={() => paginate(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                        >
+                          {'>'}
+                        </Button>
+                      </ul>
+                    )}
+                  </div>
                 </Box>
               </div>
             )}
-        
-        {emailSentSuccess && (
-          <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-            An email has been sent to the user{" "}
-          </Alert>
-        )}
+
+            {emailSentSuccess && (
+              <Alert sx={{ mt: 3, mb: 2 }} severity="success">
+                An email has been sent to the user{' '}
+              </Alert>
+            )}
           </Box>
-          </>
-          ) : (
+        </>
+      ) : (
         <Connect />
       )}
     </ThemeProvider>
