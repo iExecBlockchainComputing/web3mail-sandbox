@@ -2,7 +2,7 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import {
   EthereumClient,
   w3mConnectors,
-  w3mProvider
+  w3mProvider,
 } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/react';
 import { StrictMode } from 'react';
@@ -35,7 +35,6 @@ const bellecour = {
   },
 } as const satisfies Chain;
 
-
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement!);
 
@@ -61,13 +60,12 @@ const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
 
 const wagmiClient = createClient({
   autoConnect: true,
-   connectors: w3mConnectors({ version: 1, chains, projectId }),
+  connectors: w3mConnectors({ version: 1, chains, projectId }),
   provider,
 });
 
 // Configure modal ethereum client
 const ethereumClient = new EthereumClient(wagmiClient, chains);
-
 
 root.render(
   <StrictMode>
