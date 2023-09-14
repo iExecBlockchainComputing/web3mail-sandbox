@@ -17,7 +17,9 @@ export const fetchMyContacts = async () => {
 export const sendMail = async (
   mailObject: string,
   mailContent: string,
-  protectedData: string
+  protectedData: string,
+  contentType?: string,
+  senderName?: string
 ) => {
   try {
     const account = getAccount();
@@ -27,6 +29,8 @@ export const sendMail = async (
       mailObject,
       mailContent,
       protectedData,
+      contentType,
+      senderName,
     });
     return txHash;
   } catch (error) {
