@@ -1,4 +1,4 @@
-import { IExecWeb3Mail } from '@iexec/web3mail';
+import { IExecWeb3mail } from '@iexec/web3mail';
 import { getAccount } from '@wagmi/core';
 
 //fetch my contacts by calling fetchMyContacts method from @iexec/web3mail
@@ -6,7 +6,7 @@ export const fetchMyContacts = async () => {
   try {
     const account = getAccount();
     const provider = await account.connector?.getProvider();
-    const web3mail = new IExecWeb3Mail(provider);
+    const web3mail = new IExecWeb3mail(provider);
     const contacts = await web3mail.fetchMyContacts();
     return contacts;
   } catch (error) {
@@ -24,10 +24,10 @@ export const sendMail = async (
   try {
     const account = getAccount();
     const provider = await account.connector?.getProvider();
-    const web3mail = new IExecWeb3Mail(provider);
+    const web3mail = new IExecWeb3mail(provider);
     const txHash = await web3mail.sendEmail({
-      mailObject,
-      mailContent,
+      emailSubject: mailObject,
+      emailContent: mailContent,
       protectedData,
       contentType,
       senderName,
