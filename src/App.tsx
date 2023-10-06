@@ -99,7 +99,9 @@ export default function App() {
       await sendMail(
         'Sandbox mail subject',
         'Sandbox mail content',
-        protectedData
+        protectedData,
+        'text/plain',
+        'iExec-sandbox'
       );
       setLoading(false);
       setemailSentSuccess(true);
@@ -173,7 +175,7 @@ export default function App() {
                           fontWeight: 600,
                         }}
                       >
-                        Protected Data Address
+                        ETH Address
                       </TableCell>
                       <TableCell
                         sx={{

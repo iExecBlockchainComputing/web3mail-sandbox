@@ -15,18 +15,22 @@ export const fetchMyContacts = async () => {
   }
 };
 export const sendMail = async (
-  emailSubject: string,
-  emailContent: string,
-  protectedData: string
+  mailObject: string,
+  mailContent: string,
+  protectedData: string,
+  contentType?: string,
+  senderName?: string
 ) => {
   try {
     const account = getAccount();
     const provider = await account.connector?.getProvider();
     const web3mail = new IExecWeb3mail(provider);
     const txHash = await web3mail.sendEmail({
-      emailSubject,
-      emailContent,
+      emailSubject: mailObject,
+      emailContent: mailContent,
       protectedData,
+      contentType,
+      senderName,
     });
     return txHash;
   } catch (error) {
