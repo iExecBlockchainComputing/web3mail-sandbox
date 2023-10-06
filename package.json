@@ -1,6 +1,6 @@
 {
   "name": "web3-mail-sandbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@iexec/web3mail": "^0.5.0",
+    "@iexec/web3mail": "^0.5.1",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "latest",
     "@reduxjs/toolkit": "^1.9.3",
