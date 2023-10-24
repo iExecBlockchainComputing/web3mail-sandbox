@@ -20,5 +20,10 @@
     "sonarjs/cognitive-complexity": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
     "react/react-in-jsx-scope": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
