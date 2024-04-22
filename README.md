@@ -1,69 +1,19 @@
-<p align="center">
-  <a href="https://iex.ec/" rel="noopener" target="_blank"><img width="150" src="./logo-iexec.png" alt="iExec logo"/></a>
-</p>
+<h1 align="center">Web3Mail - Sandbox</h1>
 
-<h1 align="center">Web3Mail</h1>
+This [Vite.js](https://vitejs.dev/) project uses [Web3Mail SDK](https://github.com/iExecBlockchainComputing/web3mail-sdk) to showcase its methods. To learn more, please refer to [Web3Mail documentation](https://tools.docs.iex.ec/tools/web3mail).
 
-**Web3Mail** offers developers methods to create apps that:
+You may also find this project on [Codesandbox](https://codesandbox.io/p/github/iExecBlockchainComputing/web3mail-sandbox/main)
 
-- enable an entity (such as a (d)app provider or an end-user) to email an Ethereum account holder without knowing her/his email address
-- eliminate the need for end-users to share their email address with multiple third-parties, reducing the risk of data breaches and spam.
-
-Web3Mail is composed of 2 methods:
-
-- **fetchMyContacts** — that enables an entity to retrieve a list of Ethereum accounts whose owners have authorized the entity to email them
-- **sendEmail** — that allows an entity to email a user (previously fetched via the fetchMyContacts method) knowing only her/his Ethereum account.
-
-<div align="center">
-
-[![npm](https://img.shields.io/npm/v/web3mail-sdk)](https://www.npmjs.com/package/@iexec/web3mail)[![license](https://img.shields.io/badge/license-Apache%202-blue)](/LICENSE)
-
-</div>
+Make sure to use the last [package version](https://www.npmjs.com/package/@iexec/web3mail).
 
 ## Installation
 
-Web3Mail is available as an [npm package](https://www.npmjs.com/package/@iexec/web3mail).
+```sh
+npm ci
+```
 
-**npm:**
+## Running the project
 
 ```sh
-npm install @iexec/web3mail
+npm start
 ```
-
-**yarn:**
-
-```sh
-yarn add @iexec/web3mail
-```
-
-## Get started
-
-### Browser
-
-```ts
-import { IExecWeb3Mail } from '@iexec/web3mail';
-
-const web3Provider = window.ethereum;
-const web3Mail = new IExecWeb3Mail(web3Provider);
-```
-
-### NodeJS
-
-```ts
-import { IExecWeb3Mail, getWeb3Provider } from '@iexec/web3mail';
-
-const { PRIVATE_KEY } = process.env;
-
-const web3Provider = getWeb3Provider(PRIVATE_KEY);
-const web3Mail = new IExecWeb3Mail(web3Provider);
-```
-
-## Documentation
-
-- [Web3Mail documentation](https://tools.docs.iex.ec/tools/web3mail)
-- [Web3Mail technical design](./technical-design/index.md)
-- [iExec Protocol documentation](https://protocol.docs.iex.ec)
-
-## License
-
-This project is licensed under the terms of the [Apache 2.0](/LICENSE).
