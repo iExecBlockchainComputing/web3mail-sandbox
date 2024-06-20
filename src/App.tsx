@@ -1,7 +1,5 @@
-import { Contact } from '@iexec/web3mail';
 import {
   Alert,
-  AppBar,
   Box,
   Button,
   CircularProgress,
@@ -10,30 +8,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  ThemeProvider,
-  Toolbar,
-  Typography,
-  createTheme,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
-import './styles.css';
-import Connect from './wallet/connect';
+import { type Contact } from '@iexec/web3mail';
 import { fetchMyContacts, sendMail } from './web3mail/web3mail';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#FCD15A',
-      contrastText: '#1D1D24',
-    },
-  },
-});
+import './styles.css';
 
 export default function App() {
-  const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-
   const [loading, setLoading] = useState(false);
   const [displayTable, setdisplayTable] = useState(false);
   const [emailSentSuccess, setemailSentSuccess] = useState(false);
@@ -85,14 +66,16 @@ export default function App() {
   const handleLoadAddresses = async () => {
     try {
       setLoading(true);
-      const res = await fetchMyContacts();
-      setContacts(res);
+      const myContacts = await fetchMyContacts();
+      setContacts(myContacts);
       setLoading(false);
       setdisplayTable(true);
-    } catch (e) {
+    } catch (err) {
+      console.log('[fetchMyContacts] ERROR', err);
       setLoading(false);
     }
   };
+
   const handleSendMessage = async (protectedData: string) => {
     try {
       setLoading(true);
@@ -105,177 +88,134 @@ export default function App() {
       );
       setLoading(false);
       setemailSentSuccess(true);
-    } catch (e) {
+    } catch (err) {
+      console.log('[sendEmail] ERROR', err);
       setLoading(false);
     }
   };
 
-  //wallet address shortening
-  const shortAddress = (address: string) => {
-    return address.slice(0, 6) + '...' + address.slice(-4);
-  };
-
   return (
-    <ThemeProvider theme={theme}>
-      {isConnected ? (
-        <>
-          {/**App bar for wallet connection*/}
-          <AppBar
-            position="static"
-            elevation={0}
-            sx={{ backgroundColor: 'transparent', width: '100%' }}
+    <Box className="my-box">
+      <Button
+        sx={{ display: 'block', margin: '20px auto' }}
+        onClick={handleLoadAddresses}
+        variant="contained"
+      >
+        Load authorized addresses
+      </Button>
+      {loading && (
+        <CircularProgress
+          sx={{ display: 'block', margin: '20px auto' }}
+        ></CircularProgress>
+      )}
+
+      {displayTable && (
+        <div>
+          <Table
+            sx={{
+              maxWidth: 200,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+            aria-label="simple table"
           >
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-              <Typography
-                sx={{
-                  flexGrow: 1,
-                  textAlign: 'right',
-                  mr: 2,
-                  fontStyle: 'italic',
-                }}
-              >
-                {shortAddress(address as string)}
-              </Typography>
-              <Button variant="contained" onClick={() => disconnect()}>
-                Disconnect
-              </Button>
-            </Toolbar>
-          </AppBar>
-
-          <Box className="my-box">
-            <Button
-              sx={{ display: 'block', margin: '20px auto' }}
-              onClick={handleLoadAddresses}
-              variant="contained"
-            >
-              Load authorized addresses
-            </Button>
-            {loading && (
-              <CircularProgress
-                sx={{ display: 'block', margin: '20px auto' }}
-              ></CircularProgress>
-            )}
-
-            {displayTable && (
-              <div>
-                <Table
+            <TableHead sx={{ border: 0, borderBottom: 'none' }}>
+              <TableRow sx={{ border: 0, borderBottom: 'none' }}>
+                <TableCell
                   sx={{
-                    maxWidth: 200,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                  aria-label="simple table"
-                >
-                  <TableHead sx={{ border: 0, borderBottom: 'none' }}>
-                    <TableRow sx={{ border: 0, borderBottom: 'none' }}>
-                      <TableCell
-                        sx={{
-                          border: 0,
-                          borderBottom: 'none',
-                          fontWeight: 600,
-                        }}
-                      >
-                        ETH Address
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          border: 0,
-                          borderBottom: 'none',
-                          fontWeight: 600,
-                        }}
-                      >
-                        Action
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {currentContacts.map((contact, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{ border: 0, borderBottom: 'none' }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {shortAddress(contact.address)}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button
-                            className="ButtonSendM"
-                            sx={{}}
-                            onClick={() => handleSendMessage(contact.address)}
-                            variant="contained"
-                          >
-                            Send Message
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-
-                {/* Pagination */}
-                <Box
-                  sx={{
-                    maxWidth: 425,
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
+                    border: 0,
+                    borderBottom: 'none',
+                    fontWeight: 600,
+                    minWidth: 335,
                   }}
                 >
-                  <div>
-                    {contacts.length > contactsPerPage && (
-                      <ul className="pagination">
-                        {/* Previous button */}
-                        <Button
-                          sx={{ color: 'black' }}
-                          className="page-link"
-                          onClick={() => paginate(currentPage - 1)}
-                          disabled={currentPage === 1}
-                        >
-                          {'<'}
-                        </Button>
+                  ETH Address
+                </TableCell>
+                <TableCell
+                  sx={{
+                    border: 0,
+                    borderBottom: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  Action
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {currentContacts.map((contact, index) => (
+                <TableRow key={index} sx={{ border: 0, borderBottom: 'none' }}>
+                  <TableCell component="th" scope="row">
+                    {contact.address}
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      className="ButtonSendM"
+                      sx={{}}
+                      onClick={() => handleSendMessage(contact.address)}
+                      variant="contained"
+                    >
+                      Send Message
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-                        {/* Page numbers */}
-                        {getPageNumbers().map((pageNumber, index) => (
-                          <Fragment key={index}>
-                            <Button sx={{ color: 'black' }}>...</Button>
+          {/* Pagination */}
+          <Box
+            sx={{
+              maxWidth: 425,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            {contacts.length > contactsPerPage && (
+              <ul className="pagination">
+                {/* Previous button */}
+                <Button
+                  sx={{ color: 'black' }}
+                  className="page-link"
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  {'<'}
+                </Button>
 
-                            <Button
-                              sx={{ color: 'black' }}
-                              className="page-link"
-                              onClick={() => paginate(pageNumber)}
-                            >
-                              {pageNumber}
-                            </Button>
+                {/* Page numbers */}
+                {getPageNumbers().map((pageNumber, index) => (
+                  <Fragment key={index}>
+                    <Button
+                      sx={{ color: 'black' }}
+                      className="page-link"
+                      onClick={() => paginate(pageNumber)}
+                    >
+                      {pageNumber}
+                    </Button>
+                  </Fragment>
+                ))}
 
-                            <Button sx={{ color: 'black' }}>...</Button>
-                          </Fragment>
-                        ))}
-
-                        {/* Next button */}
-                        <Button
-                          sx={{ color: 'black' }}
-                          className="page-link"
-                          onClick={() => paginate(currentPage + 1)}
-                          disabled={currentPage === totalPages}
-                        >
-                          {'>'}
-                        </Button>
-                      </ul>
-                    )}
-                  </div>
-                </Box>
-              </div>
-            )}
-
-            {emailSentSuccess && (
-              <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-                An email has been sent to the user{' '}
-              </Alert>
+                {/* Next button */}
+                <Button
+                  sx={{ color: 'black' }}
+                  className="page-link"
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  {'>'}
+                </Button>
+              </ul>
             )}
           </Box>
-        </>
-      ) : (
-        <Connect />
+        </div>
       )}
-    </ThemeProvider>
+
+      {emailSentSuccess && (
+        <Alert sx={{ mt: 3, mb: 2 }} severity="success">
+          An email has been sent to the user{' '}
+        </Alert>
+      )}
+    </Box>
   );
 }

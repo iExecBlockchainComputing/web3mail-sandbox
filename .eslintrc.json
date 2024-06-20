@@ -16,10 +16,11 @@
     "prettier"
   ],
   "rules": {
-    "no-console": "warn",
-    "sonarjs/cognitive-complexity": "warn",
+    "no-console": "off",
+    "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-explicit-any": "warn",
-    "react/react-in-jsx-scope": "off"
+    "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+    "sonarjs/cognitive-complexity": "warn"
   },
   "settings": {
     "react": {
