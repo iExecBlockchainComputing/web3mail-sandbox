@@ -16,6 +16,7 @@ import './styles.css';
 
 export default function App() {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [displayTable, setdisplayTable] = useState(false);
   const [emailSentSuccess, setemailSentSuccess] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -66,9 +67,13 @@ export default function App() {
   const handleLoadAddresses = async () => {
     try {
       setLoading(true);
-      const myContacts = await fetchMyContacts();
-      setContacts(myContacts);
+      const { contacts: myContacts, error } = await fetchMyContacts();
       setLoading(false);
+      if (error) {
+        setErrorMessage(error);
+        return;
+      }
+      setContacts(myContacts as Contact[]);
       setdisplayTable(true);
     } catch (err) {
       console.log('[fetchMyContacts] ERROR', err);
@@ -97,12 +102,19 @@ export default function App() {
   return (
     <Box className="my-box">
       <Button
-        sx={{ display: 'block', margin: '20px auto' }}
+        sx={{ display: 'block', margin: '30px auto' }}
         onClick={handleLoadAddresses}
         variant="contained"
       >
         Load authorized addresses
       </Button>
+
+      {errorMessage && (
+        <Alert severity="error" style={{ maxWidth: 300, margin: 'auto' }}>
+          {errorMessage}
+        </Alert>
+      )}
+
       {loading && (
         <CircularProgress
           sx={{ display: 'block', margin: '20px auto' }}
@@ -212,7 +224,10 @@ export default function App() {
       )}
 
       {emailSentSuccess && (
-        <Alert sx={{ mt: 3, mb: 2 }} severity="success">
+        <Alert
+          severity="success"
+          style={{ maxWidth: 300, margin: '30px auto' }}
+        >
           The email is being sent.
         </Alert>
       )}
