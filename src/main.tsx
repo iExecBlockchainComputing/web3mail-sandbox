@@ -17,11 +17,6 @@ const theme = createTheme({
   },
 });
 
-// TODO Propose user to switch chain if not Bellecour:
-// https://docs.metamask.io/wallet/reference/wallet_switchethereumchain/
-
-// TODO Add Connect / Log out buttons
-
 root.render(
   <StrictMode>
     <ThemeProvider theme={theme}>
