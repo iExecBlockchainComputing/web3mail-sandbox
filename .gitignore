@@ -2,7 +2,7 @@
 /dist
 
 # Dependency directories
-**/node_modules/
+/node_modules
 
 # IDE files
 /.vscode
@@ -20,12 +20,5 @@
 # tests output
 /coverage
 
-
 # sonar output
 .scannerwork
-
-#dist
-**/dist/
-
-#codesandboc
-.codesandbox
