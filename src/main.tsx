@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import '@fontsource/mulish/latin-400.css';
 import App from './App';
 
 const rootElement = document.getElementById('root');
