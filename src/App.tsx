@@ -213,7 +213,7 @@ export default function App() {
 
       {emailSentSuccess && (
         <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-          An email has been sent to the user{' '}
+          The email is being sent.
         </Alert>
       )}
     </Box>
