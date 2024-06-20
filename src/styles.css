@@ -1,7 +1,8 @@
-.App {
-  font-family: sans-serif;
+html, body {
+  font-family: "Mulish", ui-sans-serif, system-ui, sans-serif;
   text-align: center;
 }
+
 .ButtonSendM {
   display: flex;
   flex-direction: row;
@@ -11,7 +12,6 @@
   gap: 8px;
   width: 153px;
   height: 35px;
-  font-family: "Proxima Nova";
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -20,4 +20,11 @@
   color: #1d1d24;
   background: #fcd15a;
   border-radius: 8px;
+}
+
+.pagination {
+  margin: 15px 0 0 0;
+  padding: 0;
+  width: 100%;
+  text-align: center;
 }
