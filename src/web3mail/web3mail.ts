@@ -29,12 +29,7 @@ export async function sendMail(
     protectedData,
     contentType,
     senderName,
-    /**
-     * this demo uses a workerpool offering free computing power dedicated to learning
-     * this resource is shared and may be throttled, it should not be used for production applications
-     * remove the `workerpoolAddressOrEns` option to switch back to a production ready workerpool
-     */
-    workerpoolAddressOrEns: 'prod-v8-learn.main.pools.iexec.eth',
+    useVoucher: true,
   });
   console.log('iExec worker taskId', taskId);
   return taskId;
