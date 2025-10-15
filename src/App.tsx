@@ -3,18 +3,27 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { type Contact } from '@iexec/web3mail';
 import { fetchMyContacts, sendMail } from './web3mail/web3mail';
+import { SUPPORTED_CHAINS } from './web3mail/utils';
+import { useWalletConnection } from './hooks/useWalletConnection';
 import './styles.css';
 
 export default function App() {
+  const { isConnected, address } = useWalletConnection();
+  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[0].id);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [displayTable, setdisplayTable] = useState(false);
@@ -64,10 +73,55 @@ export default function App() {
     return pageNumbers;
   };
 
+  const handleChainChange = async (event: any) => {
+    const newChainId = Number(event.target.value);
+    setSelectedChain(newChainId);
+
+    // Reset state when switching chains
+    setContacts([]);
+    setdisplayTable(false);
+    setErrorMessage('');
+    setemailSentSuccess(false);
+
+    // Switch MetaMask to the selected chain
+    try {
+      const chain = SUPPORTED_CHAINS.find(c => c.id === newChainId);
+      if (!chain) return;
+
+      const chainIdHex = `0x${newChainId.toString(16)}`;
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: chainIdHex }],
+        });
+      } catch (switchError: unknown) {
+        if ((switchError as { code?: number }).code === 4902) {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: chainIdHex,
+              chainName: chain.name,
+              nativeCurrency: {
+                name: chain.tokenSymbol,
+                symbol: chain.tokenSymbol,
+                decimals: 18,
+              },
+              rpcUrls: chain.rpcUrls,
+              blockExplorerUrls: [chain.blockExplorerUrl],
+            }],
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to switch chain:', error);
+    }
+  };
+
   const handleLoadAddresses = async () => {
     try {
       setLoading(true);
-      const { contacts: myContacts, error } = await fetchMyContacts();
+      const { contacts: myContacts, error } = await fetchMyContacts(selectedChain);
       setLoading(false);
       if (error) {
         setErrorMessage(error);
@@ -78,6 +132,7 @@ export default function App() {
     } catch (err) {
       console.log('[fetchMyContacts] ERROR', err);
       setLoading(false);
+      setErrorMessage('Failed to load contacts. Please check your wallet connection and chain selection.');
     }
   };
 
@@ -89,18 +144,56 @@ export default function App() {
         'Sandbox mail content',
         protectedData,
         'text/plain',
-        'iExec-sandbox'
+        'iExec-sandbox',
+        selectedChain
       );
       setLoading(false);
       setemailSentSuccess(true);
     } catch (err) {
       console.log('[sendEmail] ERROR', err);
       setLoading(false);
+      setErrorMessage('Failed to send email. Please check your wallet connection and chain selection.');
     }
   };
 
   return (
     <Box className="my-box">
+      {/* Chain Selection */}
+      <Box sx={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <Typography variant="h6" sx={{ marginBottom: '20px', textAlign: 'center' }}>
+          Chain Selection
+        </Typography>
+
+        <FormControl fullWidth sx={{ marginBottom: '15px' }}>
+          <InputLabel>Select Chain</InputLabel>
+          <Select
+            value={selectedChain}
+            onChange={handleChainChange}
+            label="Select Chain"
+          >
+            {SUPPORTED_CHAINS.map((chain) => (
+              <MenuItem key={chain.id} value={chain.id}>
+                {chain.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Typography variant="body2" sx={{ marginBottom: '10px', color: '#666' }}>
+          Selected: {SUPPORTED_CHAINS.find(c => c.id === selectedChain)?.name} (ID: {selectedChain})
+        </Typography>
+
+        <Typography variant="body2" sx={{ color: '#666' }}>
+          <strong>Wallet:</strong> {isConnected ? 'Connected' : 'Disconnected'}
+          {address && (
+            <>
+              <br />
+              <strong>Address:</strong> {address.slice(0, 6)}...{address.slice(-4)}
+            </>
+          )}
+        </Typography>
+      </Box>
+
       <Button
         sx={{ display: 'block', margin: '30px auto' }}
         onClick={handleLoadAddresses}
