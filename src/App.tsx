@@ -4,7 +4,6 @@ import {
   Button,
   CircularProgress,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Table,
@@ -181,20 +180,30 @@ export default function App() {
           Chain Selection
         </Typography>
 
-        <FormControl fullWidth sx={{ marginBottom: '15px' }}>
-          <InputLabel>Select Chain</InputLabel>
-          <Select
-            value={selectedChain}
-            onChange={handleChainChange}
-            label="Select Chain"
-          >
-            {SUPPORTED_CHAINS.map((chain) => (
-              <MenuItem key={chain.id} value={chain.id}>
-                {chain.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            marginBottom: '20px',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <Select
+              value={selectedChain}
+              onChange={handleChainChange}
+              displayEmpty
+            >
+              {SUPPORTED_CHAINS.map((chain) => (
+                <MenuItem key={chain.id} value={chain.id}>
+                  {chain.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
         <Typography
           variant="body2"
@@ -203,7 +212,6 @@ export default function App() {
           Selected: {SUPPORTED_CHAINS.find((c) => c.id === selectedChain)?.name}{' '}
           (ID: {selectedChain})
         </Typography>
-
         <Typography variant="body2" sx={{ color: '#666' }}>
           <strong>Wallet:</strong> {isConnected ? 'Connected' : 'Disconnected'}
           {address && (
