@@ -8,9 +8,7 @@ export async function fetchMyContacts(selectedChainId?: number) {
     return { contacts: null, error: 'Please install MetaMask' };
   }
   await checkCurrentChain(selectedChainId);
-  const web3mail = new IExecWeb3mail(window.ethereum, {
-    allowExperimentalNetworks: true,
-  });
+  const web3mail = new IExecWeb3mail(window.ethereum);
   const contacts = await web3mail.fetchMyContacts();
   return { contacts, error: '' };
 }
