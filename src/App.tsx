@@ -85,7 +85,7 @@ export default function App() {
 
     // Switch MetaMask to the selected chain
     try {
-      const chain = SUPPORTED_CHAINS.find(c => c.id === newChainId);
+      const chain = SUPPORTED_CHAINS.find((c) => c.id === newChainId);
       if (!chain) return;
 
       const chainIdHex = `0x${newChainId.toString(16)}`;
@@ -99,17 +99,19 @@ export default function App() {
         if ((switchError as { code?: number }).code === 4902) {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: chainIdHex,
-              chainName: chain.name,
-              nativeCurrency: {
-                name: chain.tokenSymbol,
-                symbol: chain.tokenSymbol,
-                decimals: 18,
+            params: [
+              {
+                chainId: chainIdHex,
+                chainName: chain.name,
+                nativeCurrency: {
+                  name: chain.tokenSymbol,
+                  symbol: chain.tokenSymbol,
+                  decimals: 18,
+                },
+                rpcUrls: chain.rpcUrls,
+                blockExplorerUrls: [chain.blockExplorerUrl],
               },
-              rpcUrls: chain.rpcUrls,
-              blockExplorerUrls: [chain.blockExplorerUrl],
-            }],
+            ],
           });
         }
       }
@@ -121,7 +123,8 @@ export default function App() {
   const handleLoadAddresses = async () => {
     try {
       setLoading(true);
-      const { contacts: myContacts, error } = await fetchMyContacts(selectedChain);
+      const { contacts: myContacts, error } =
+        await fetchMyContacts(selectedChain);
       setLoading(false);
       if (error) {
         setErrorMessage(error);
@@ -132,7 +135,9 @@ export default function App() {
     } catch (err) {
       console.log('[fetchMyContacts] ERROR', err);
       setLoading(false);
-      setErrorMessage('Failed to load contacts. Please check your wallet connection and chain selection.');
+      setErrorMessage(
+        'Failed to load contacts. Please check your wallet connection and chain selection.'
+      );
     }
   };
 
@@ -152,15 +157,27 @@ export default function App() {
     } catch (err) {
       console.log('[sendEmail] ERROR', err);
       setLoading(false);
-      setErrorMessage('Failed to send email. Please check your wallet connection and chain selection.');
+      setErrorMessage(
+        'Failed to send email. Please check your wallet connection and chain selection.'
+      );
     }
   };
 
   return (
     <Box className="my-box">
       {/* Chain Selection */}
-      <Box sx={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <Typography variant="h6" sx={{ marginBottom: '20px', textAlign: 'center' }}>
+      <Box
+        sx={{
+          marginBottom: '30px',
+          padding: '20px',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ marginBottom: '20px', textAlign: 'center' }}
+        >
           Chain Selection
         </Typography>
 
@@ -179,8 +196,12 @@ export default function App() {
           </Select>
         </FormControl>
 
-        <Typography variant="body2" sx={{ marginBottom: '10px', color: '#666' }}>
-          Selected: {SUPPORTED_CHAINS.find(c => c.id === selectedChain)?.name} (ID: {selectedChain})
+        <Typography
+          variant="body2"
+          sx={{ marginBottom: '10px', color: '#666' }}
+        >
+          Selected: {SUPPORTED_CHAINS.find((c) => c.id === selectedChain)?.name}{' '}
+          (ID: {selectedChain})
         </Typography>
 
         <Typography variant="body2" sx={{ color: '#666' }}>
@@ -188,7 +209,8 @@ export default function App() {
           {address && (
             <>
               <br />
-              <strong>Address:</strong> {address.slice(0, 6)}...{address.slice(-4)}
+              <strong>Address:</strong> {address.slice(0, 6)}...
+              {address.slice(-4)}
             </>
           )}
         </Typography>

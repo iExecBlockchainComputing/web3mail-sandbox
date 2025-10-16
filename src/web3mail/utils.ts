@@ -45,10 +45,12 @@ export async function checkCurrentChain(selectedChainId?: number) {
     params: [],
   });
 
-  const targetChainId = selectedChainId ? `0x${selectedChainId.toString(16)}` : IEXEC_CHAIN_ID;
+  const targetChainId = selectedChainId
+    ? `0x${selectedChainId.toString(16)}`
+    : IEXEC_CHAIN_ID;
 
   if (currentChainId !== targetChainId) {
-    const chain = SUPPORTED_CHAINS.find(c => c.id === selectedChainId);
+    const chain = SUPPORTED_CHAINS.find((c) => c.id === selectedChainId);
     if (!chain) {
       throw new Error(`Chain with ID ${selectedChainId} not supported`);
     }
