@@ -22,7 +22,7 @@ import './styles.css';
 
 export default function App() {
   const { isConnected, address } = useWalletConnection();
-  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[0].id);
+  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[2].id);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [displayTable, setdisplayTable] = useState(false);
