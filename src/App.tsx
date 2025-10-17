@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { type Contact } from '@iexec/web3mail';
 import { fetchMyContacts, sendMail } from './web3mail/web3mail';
 import { SUPPORTED_CHAINS } from './web3mail/utils';
@@ -22,7 +22,7 @@ import './styles.css';
 
 export default function App() {
   const { isConnected, address } = useWalletConnection();
-  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[2].id);
+  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[1].id);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [displayTable, setdisplayTable] = useState(false);
@@ -72,7 +72,7 @@ export default function App() {
     return pageNumbers;
   };
 
-  const handleChainChange = async (event: any) => {
+  const handleChainChange = async (event: { target: { value: number } }) => {
     const newChainId = Number(event.target.value);
     setSelectedChain(newChainId);
 
@@ -118,6 +118,13 @@ export default function App() {
       console.error('Failed to switch chain:', error);
     }
   };
+
+  // Force chain switch on component mount if wallet is connected
+  useEffect(() => {
+    if (isConnected && window.ethereum) {
+      handleChainChange({ target: { value: selectedChain } });
+    }
+  }, [isConnected, selectedChain]);
 
   const handleLoadAddresses = async () => {
     try {
