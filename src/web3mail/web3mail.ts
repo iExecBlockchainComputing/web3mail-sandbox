@@ -1,13 +1,13 @@
 import { IExecWeb3mail } from '@iexec/web3mail';
 import { checkCurrentChain, checkIsConnected } from './utils';
 
-export async function fetchMyContacts() {
+export async function fetchMyContacts(selectedChainId?: number) {
   try {
     checkIsConnected();
   } catch (err) {
     return { contacts: null, error: 'Please install MetaMask' };
   }
-  await checkCurrentChain();
+  await checkCurrentChain(selectedChainId);
   const web3mail = new IExecWeb3mail(window.ethereum);
   const contacts = await web3mail.fetchMyContacts();
   return { contacts, error: '' };
@@ -18,10 +18,11 @@ export async function sendMail(
   mailContent: string,
   protectedData: string,
   contentType?: string,
-  senderName?: string
+  senderName?: string,
+  selectedChainId?: number
 ) {
   checkIsConnected();
-  await checkCurrentChain();
+  await checkCurrentChain(selectedChainId);
   const web3mail = new IExecWeb3mail(window.ethereum);
   const { taskId } = await web3mail.sendEmail({
     emailSubject: mailObject,
@@ -34,7 +35,11 @@ export async function sendMail(
      * this resource is shared and may be throttled, it should not be used for production applications
      * remove the `workerpoolAddressOrEns` option to switch back to a production ready workerpool
      */
-    workerpoolAddressOrEns: 'prod-v8-learn.main.pools.iexec.eth',
+    workerpoolAddressOrEns:
+      selectedChainId !== 134
+        ? undefined
+        : 'prod-v8-learn.main.pools.iexec.eth',
+    workerpoolMaxPrice: selectedChainId !== 134 ? 0.1 * 1e9 : undefined,
   });
   console.log('iExec worker taskId', taskId);
   return taskId;
